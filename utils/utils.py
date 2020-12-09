@@ -48,17 +48,18 @@ def flip_lr_off(x, flip_idx):
   return torch.from_numpy(tmp.reshape(shape)).to(x.device)
 
 
-def load_model(model, pretrain_dir):
+def load_model(model, pretrain_dir, is_test=True):
   state_dict_ = torch.load(pretrain_dir, map_location='cuda:0')
   print('loaded pretrained weights form %s !' % pretrain_dir)
   state_dict = OrderedDict()
 
-  # convert data_parallal to model
-  for key in state_dict_:
-    if key.startswith('module') and not key.startswith('module_list'):
-      state_dict[key[7:]] = state_dict_[key]
-    else:
-      state_dict[key] = state_dict_[key]
+  if is_test:
+    # convert data_parallal to model
+    for key in state_dict_:
+      if key.startswith('module') and not key.startswith('module_list'):
+        state_dict[key[7:]] = state_dict_[key]
+      else:
+        state_dict[key] = state_dict_[key]
 
   # check loaded parameters and created model parameters
   model_state_dict = model.state_dict()

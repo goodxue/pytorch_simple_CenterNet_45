@@ -139,9 +139,20 @@ def main():
       for k in batch:
         if k != 'meta':
           batch[k] = batch[k].to(device=cfg.device, non_blocking=True)
+'''
+#TUDO
+由于用的是CenterTrack的nuscenes数据集，则根据CenterTrack的代码格式继续写训练代码
 
+数据集 √
+模型√
+loss
+train
+'''
       outputs = model(batch['image'])
-      hmap, regs, w_h_ = zip(*outputs)
+      #hmap, regs, w_h_ = zip(*outputs)
+      hmap = outputs['hm']
+      regs = outputs['reg']
+      w_h_ = outputs['wh']
       regs = [_tranpose_and_gather_feature(r, batch['inds']) for r in regs]
       w_h_ = [_tranpose_and_gather_feature(r, batch['inds']) for r in w_h_]
 

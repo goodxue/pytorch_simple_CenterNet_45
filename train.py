@@ -126,7 +126,8 @@ def main():
     model = nn.DataParallel(model).to(cfg.device)
 
   if os.path.isfile(cfg.pretrain_dir):
-    model = load_model(model, cfg.pretrain_dir)
+    print('Using pretrained model in :'+ cfg.pretrain_dir)
+    model = load_model(model, cfg.pretrain_dir,is_test=False)
 
   optimizer = torch.optim.Adam(model.parameters(), cfg.lr)
   lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, cfg.lr_step, gamma=0.1)
