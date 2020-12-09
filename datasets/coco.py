@@ -105,6 +105,7 @@ bboxes 图片标记的所有框的列表
  [471.64 172.82  35.92  48.1 ]
  [486.01 183.31  30.63  34.98]]
 '''
+
     img = cv2.imread(img_path)
     height, width = img.shape[0], img.shape[1]
     center = np.array([width / 2., height / 2.], dtype=np.float32)  # center of image
