@@ -96,21 +96,19 @@ class COCO(data.Dataset):
       bboxes = np.array([[0., 0., 0., 0.]], dtype=np.float32)
       labels = np.array([[0]])
     bboxes[:, 2:] += bboxes[:, :2]  # xywh to xyxy
-'''
-imgs = coco_a.getImgIds()  [391895, 522418, 184613, 318219, ...]图片id列表
-
-bboxes 图片标记的所有框的列表
-[[359.17 146.17 112.45 213.57]
- [339.88  22.16 153.88 300.73]
- [471.64 172.82  35.92  48.1 ]
- [486.01 183.31  30.63  34.98]]
-'''
-
     img = cv2.imread(img_path)
     height, width = img.shape[0], img.shape[1]
     center = np.array([width / 2., height / 2.], dtype=np.float32)  # center of image
     scale = max(height, width) * 1.0
+    '''
+    imgs = coco_a.getImgIds()  [391895, 522418, 184613, 318219, ...]图片id列表
 
+    bboxes 图片标记的所有框的列表
+    [[359.17 146.17 112.45 213.57]
+    [339.88  22.16 153.88 300.73]
+    [471.64 172.82  35.92  48.1 ]
+    [486.01 183.31  30.63  34.98]]
+    '''
     flipped = False
     if self.split == 'train':
       scale = scale * np.random.choice(self.rand_scales)
