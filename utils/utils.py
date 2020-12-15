@@ -53,13 +53,12 @@ def load_model(model, pretrain_dir, is_test=True):
   print('loaded pretrained weights form %s !' % pretrain_dir)
   state_dict = OrderedDict()
 
-  if is_test:
-    # convert data_parallal to model
-    for key in state_dict_:
-      if key.startswith('module') and not key.startswith('module_list'):
-        state_dict[key[7:]] = state_dict_[key]
-      else:
-        state_dict[key] = state_dict_[key]
+  # convert data_parallal to model
+  for key in state_dict_:
+    if key.startswith('module') and not key.startswith('module_list'):
+      state_dict[key[7:]] = state_dict_[key]
+    else:
+      state_dict[key] = state_dict_[key]
 
   # check loaded parameters and created model parameters
   model_state_dict = model.state_dict()

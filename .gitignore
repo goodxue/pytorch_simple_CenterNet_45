@@ -1,0 +1,10 @@
+ckpt/
+data/coco/
+datasets/__pycache__/
+lib/DCNv2/
+lib/cocoapi/PythonAPI/pycocotools/_mask.cpython-36m-x86_64-linux-gnu.so
+lib/nms/__pycache__/
+logs/
+nets/__pycache__/
+utils/__pycache__/
+

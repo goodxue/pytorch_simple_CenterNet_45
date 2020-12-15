@@ -6,7 +6,7 @@ import argparse
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'lib'))
 
 # os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # see issue #152
-# os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+os.environ["CUDA_VISIBLE_DEVICES"] = '1,2,3'
 
 import numpy as np
 
@@ -82,8 +82,8 @@ def main():
   if cfg.dist:
     cfg.device = torch.device('cuda:%d' % cfg.local_rank)
     torch.cuda.set_device(cfg.local_rank)
-    dist.init_process_group(backend='nccl', init_method='env://',
-                            world_size=num_gpus, rank=cfg.local_rank)
+    dist.init_process_group(backend='nccl', init_method='env://')#,
+    #                        world_size=num_gpus, rank=cfg.local_rank)
   else:
     cfg.device = torch.device('cuda')
 
@@ -127,7 +127,7 @@ def main():
 
   if os.path.isfile(cfg.pretrain_dir):
     print('Using pretrained model in :'+ cfg.pretrain_dir)
-    model = load_model(model, cfg.pretrain_dir,is_test=False)
+    model = load_model(model.module, cfg.pretrain_dir,is_test=True)
 
   optimizer = torch.optim.Adam(model.parameters(), cfg.lr)
   lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, cfg.lr_step, gamma=0.1)
@@ -227,7 +227,10 @@ def main():
     train(epoch)
     if cfg.val_interval > 0 and epoch % cfg.val_interval == 0:
       val_map(epoch)
-    print(saver.save(model.module.state_dict(), 'checkpoint'))
+    if os.path.isfile(cfg.pretrain_dir):
+      print(saver.save(model.module.state_dict(), 'checkpoint_with_pretrain'))
+    else:
+      print(saver.save(model.module.state_dict(), 'checkpoint'))
     lr_scheduler.step(epoch)  # move to here after pytorch1.1.0
 
   summary_writer.close()
